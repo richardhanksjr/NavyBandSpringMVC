@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import entities.Address;
 import entities.Band;
+import entities.BookingStatus;
 import entities.CivilianRequest;
 import entities.MilitaryRequest;
 import entities.PointOfContact;
@@ -81,6 +82,17 @@ public class NavyBandJPADAO implements NavyBandDAO{
 		return poc;
 	}
 	
+	public void setCivilianBookingStatusToCancelled(int bookingId){
+		CivilianRequest cr = em.find(CivilianRequest.class,  bookingId);
+		BookingStatus bs = em.find(BookingStatus.class,  3);
+		cr.setBookingStatus(bs);
+	}
+	
+	public void setMilitaryBookingStatusToCancelled(int bookingId){
+		MilitaryRequest mr = em.find(MilitaryRequest.class,  bookingId);
+		BookingStatus bs = em.find(BookingStatus.class,  3);
+		mr.setBookingStatus(bs);
+	}
 	public PointOfContact getPointOfContactByEmail(String email){
 		String query = "Select p from PointOfContact p where email = '" + email + "'";
 		System.out.println(email);
@@ -117,6 +129,16 @@ public class NavyBandJPADAO implements NavyBandDAO{
 		return civilianRequest;
 	}
 	
+	public MilitaryRequest getMilitaryRequestById(int id){
+		MilitaryRequest militaryRequest;
+		String query = "select m from MilitaryRequest m where id = '" + id + "'";
+		try{
+		 militaryRequest = em.createQuery(query, MilitaryRequest.class).getSingleResult();
+		}catch(Exception e){
+			 militaryRequest = null;
+		}
+		return militaryRequest;
+	}
 //	public Band getBandById(int id){
 //		String query = "select b from band b where id = '" + id + "'";
 //		Band band = em.createQuery(query, Band.class).getSingleResult();

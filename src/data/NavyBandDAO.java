@@ -19,5 +19,8 @@ public interface NavyBandDAO {
 	public PointOfContact getPointOfContactByEmail(String email);
 	public Band getBandByEmail(String email);
 	public CivilianRequest getCivilianRequestById(int id);
+	public MilitaryRequest getMilitaryRequestById(int id);
+	public void setCivilianBookingStatusToCancelled(int bookingId);
+	public void setMilitaryBookingStatusToCancelled(int bookingId);
 	
 }

@@ -12,8 +12,8 @@
 	<form action="logOut.do" method="GET">
 		<input type="submit" value="Log Out">
 	</form>
-	<form action = "loadUserEdit.do" method = "GET">
-		<input type = "submit" value = "Edit Account Information">
+	<form action="loadUserEdit.do" method="GET">
+		<input type="submit" value="Edit Account Information">
 	</form>
 	<div>Welcome, ${user.firstName}</div>
 	<br>
@@ -21,12 +21,13 @@
 	<br>
 	<br>
 	<h4>Request the Band For a MILITARY-related Event</h4>
-	<form action = "loadMilitaryRequest.do" method = "GET">
-		<input type = "submit" value = "New Military Event">
+	<form action="loadMilitaryRequest.do" method="GET">
+		<input type="submit" value="New Military Event">
 	</form>
+
 	<h4>Request the Band For a CIVILIAN-related Event</h4>
-	<form action = "loadCivilianRequest.do" method = "GET">
-		<input type = "submit" value = "New Civilian Event">
+	<form action="loadCivilianRequest.do" method="GET">
+		<input type="submit" value="New Civilian Event">
 	</form>
 	<div>Contact the Band</div>
 	<a href="mailto:${band.email }" target="_top">Contact the Band</a>
@@ -49,9 +50,15 @@
 					<td>${requests.description }</td>
 					<td>
 						<form action="editCivilianRequest.do" method="POST">
-							<input type = "hidden" name = "requestId" value = "${requests.id}">
+							<input type="hidden" name="requestId" value="${requests.id}">
 							<input type="submit" name="submit"
 								value="Edit Request Information">
+						</form>
+						<form action="setCivilianBookingStatusToCancelled.do" method="GET">
+							<input type="hidden" name="bookingId"
+								value="${requests.bookingStatus.id }">
+								<input type = "hidden" name = "userEmail" value = "${user.email }">
+								<input type="submit" value="Cancel Event">
 						</form>
 
 					</td>
@@ -79,8 +86,14 @@
 					<td>${requests.description }</td>
 					<td>
 						<form action="editMilitaryRequest.do" method="POST">
+						<input type="hidden" name="requestId" value="${requests.id}">
 							<input type="submit" name="submit"
 								value="Edit Request Information">
+						</form>
+						<form action="setMilitaryBookingStatusToCancelled.do" method="GET">
+							<input type = "hidden" name = "bookingId" value = "${requests.bookingStatus.id }">
+							<input type = "hidden" name = "userEmail" value = "${user.email }">
+							<input type="submit" value="Cancel Event">
 						</form>
 
 					</td>
@@ -99,7 +112,7 @@
 			<td>${band.streetAddress }</td>
 		</tr>
 		<tr>
-			<td>${band.city }, ${band.state } ${band.zip }</td>
+			<td>${band.city },${band.state }${band.zip }</td>
 		</tr>
 		<tr>
 			<td>Phone: ${band.phone }, (DSN) ${band.dsn }

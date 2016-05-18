@@ -86,8 +86,8 @@ public class NavyBandController {
 			}
 		}
 		// If the error validation works out, create a new PointOfContact
-		PointOfContact addNewPOC = dao.createNewPointOfContact(rank, firstName, lastName, title, street, aptPoNumber, city, state,
-				zip, workPhone, cellPhone, homePhone, email, fax, password);
+		PointOfContact addNewPOC = dao.createNewPointOfContact(rank, firstName, lastName, title, street, aptPoNumber,
+				city, state, zip, workPhone, cellPhone, homePhone, email, fax, password);
 		// If the creation of a new POC comes back with a non-zero value, the
 		// email provided is already associated
 		// with another account.
@@ -96,46 +96,75 @@ public class NavyBandController {
 			mv.addObject("duplicateEmailError", duplicateEmailError);
 
 		}
-		//Method call to get the Band object and assign it to the session.
-				assignBandToSession(session);
+		// Method call to get the Band object and assign it to the session.
+		assignBandToSession(session);
 		session.setAttribute("user", addNewPOC);
 		mv.setViewName("main.jsp");
-		
 
 		return mv;
 	}
 
 	@RequestMapping("loadUserEdit.do")
-	public ModelAndView loadEditUser(){
+	public ModelAndView loadEditUser() {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("editUser.jsp");
 		return mv;
 	}
+
 	@RequestMapping("loadCivilianRequest.do")
-	public ModelAndView loadCivilianRequest(){
+	public ModelAndView loadCivilianRequest() {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("civilianRequest.jsp");
 		return mv;
 	}
-	
+
+	// Get the booking id for a gig and set it's booking status to cancelled
+	@RequestMapping("setCivilianBookingStatusToCancelled.do")
+	public String setCivilianBookingStatusToCancelled(@RequestParam("bookingId") int bookingId,
+			@RequestParam("userEmail") String userEmail, HttpSession session) {
+		dao.setCivilianBookingStatusToCancelled(bookingId);
+		// Refresh the user's information and put that updated user in the
+		// session
+		// so current information displays.
+		refreshUserInSession(session, userEmail);
+
+		return ("main.jsp");
+	}
+
+	// Get the booking id for a gig and set it's booking status to cancelled
+	@RequestMapping("setMilitaryBookingStatusToCancelled.do")
+	public String setMilitaryBookingStatusToCancelled(@RequestParam("bookingId") int bookingId,
+			@RequestParam("userEmail") String userEmail, HttpSession session) {
+		dao.setMilitaryBookingStatusToCancelled(bookingId);
+		// Refresh the user's information and put that updated user in the
+		// session
+		// so current information displays.
+		refreshUserInSession(session, userEmail);
+
+		return ("main.jsp");
+	}
+
 	@RequestMapping("loadMilitaryRequest.do")
-	public ModelAndView loadMilitaryRequest(){
+	public ModelAndView loadMilitaryRequest() {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("militaryRequest.jsp");
 		return mv;
 	}
+
 	// Method for logging a user into the system. Gets PointOfContact by email,
 	// checks password, and adds
 	// that POC to the session scope.
 	@RequestMapping("userLogIn.do")
 	public ModelAndView userLogIn(String email, String password, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
-		//Method call to get the Band object and assign it to the session.
+		// Method call to get the Band object and assign it to the session.
+
 		assignBandToSession(session);
 		// Check if the email entered is the band log-in
 		if (email.equals(bandEmail)) {
-			//band and pointOfContact emails are put to lower case both in the creation (DAO) and here in the check so that 
-			//email log-ins are case INsensitive.
+			// band and pointOfContact emails are put to lower case both in the
+			// creation (DAO) and here in the check so that
+			// email log-ins are case INsensitive.
 			Band band = dao.getBandByEmail(email.toLowerCase());
 			// If Band comes back null, there was a database error. Send them
 			// back to log-in with an error message.
@@ -174,6 +203,7 @@ public class NavyBandController {
 					mv.setViewName("index.jsp");
 					return mv;
 				} else {
+					// addUserToSession(session, pc);
 					session.setAttribute("user", pc);
 					mv.setViewName("main.jsp");
 				}
@@ -182,30 +212,57 @@ public class NavyBandController {
 		}
 	}
 
-		//Logs the user/band out and invalidates the session.
-		@RequestMapping("logOut.do")
-		public String logOut(HttpSession session){
-			session.invalidate();
-			return "index.jsp";
-		}
+	private void refreshUserInSession(HttpSession session, String pointOfContactEmail) {
 
-		@RequestMapping("editCivilianRequest.do")
-			public ModelAndView editCivilianRequest(@RequestParam("requestId") int id){
-				ModelAndView mv = new ModelAndView();
-				CivilianRequest civilianRequest = dao.getCivilianRequestById(id);
-				//If request comes back null, there was an error in querying the database.
-				//Send the user back to main.jsp
-				if(civilianRequest.equals(null)){
-					mv.setViewName("main.jsp");
-					return mv;
-			}else{
-				mv.addObject("request", civilianRequest);
-				mv.setViewName("editRequest.jsp");
-				return mv;
-			}
+		session.removeAttribute("user");
+		PointOfContact newUser = dao.getPointOfContactByEmail(pointOfContactEmail);
+		session.setAttribute("user", newUser);
+
+	}
+
+	// Logs the user/band out and invalidates the session.
+	@RequestMapping("logOut.do")
+	public String logOut(HttpSession session) {
+		session.invalidate();
+		return "index.jsp";
+	}
+
+	@RequestMapping("editCivilianRequest.do")
+	public ModelAndView editCivilianRequest(@RequestParam("requestId") int id) {
+		ModelAndView mv = new ModelAndView();
+		CivilianRequest civilianRequest = dao.getCivilianRequestById(id);
+		// If request comes back null, there was an error in querying the
+		// database.
+		// Send the user back to main.jsp
+		if (civilianRequest.equals(null)) {
+			mv.setViewName("main.jsp");
+			return mv;
+		} else {
+			mv.addObject("request", civilianRequest);
+			mv.setViewName("editRequest.jsp");
+			return mv;
 		}
-private void assignBandToSession(HttpSession session){
-	Band band = dao.getBandById(1);
-	session.setAttribute("band",  band);
-}
+	}
+
+	@RequestMapping("editMilitaryRequest.do")
+	public ModelAndView editMilitaryRequest(@RequestParam("requestId") int id) {
+		ModelAndView mv = new ModelAndView();
+		MilitaryRequest militaryRequest = dao.getMilitaryRequestById(id);
+		// If request comes back null, there was an error in querying the
+		// database.
+		// Send the user back to main.jsp
+		if (militaryRequest.equals(null)) {
+			mv.setViewName("main.jsp");
+			return mv;
+		} else {
+			mv.addObject("request", militaryRequest);
+			mv.setViewName("editMilitaryRequest.jsp");
+			return mv;
+		}
+	}
+
+	private void assignBandToSession(HttpSession session) {
+		Band band = dao.getBandById(1);
+		session.setAttribute("band", band);
+	}
 }
