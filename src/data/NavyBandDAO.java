@@ -25,5 +25,8 @@ public interface NavyBandDAO {
 	public void updateMilitaryRequestInfo(String street, String aptPoNumber,
 			String city, String state, String zip, String year, String description,
 			String month, String day, String time, int dateOfEventId, int addressId, int militaryRequestId);
+	public void updateCivilianRequestInfo(String street, String aptPoNumber,
+			String city, String state, String zip, String year, String description,
+			String month, String day, String time, int dateOfEventId, int addressId, int civilianRequestId);
 	
 }

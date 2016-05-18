@@ -108,6 +108,26 @@ public class NavyBandJPADAO implements NavyBandDAO{
 		
 		
 	}
+	
+	public void updateCivilianRequestInfo(String street, String aptPoNumber,
+			String city, String state, String zip, String year, String description,
+			String month, String day, String time, int dateOfEventId, int addressId, int civilianRequestId){
+		Address address = em.find(Address.class, addressId);
+		DateOfEvent dateOfEvent = em.find(DateOfEvent.class, dateOfEventId);
+		CivilianRequest civilianRequest = em.find(CivilianRequest.class,  civilianRequestId);
+		address.setStreet(street);
+		address.setAptPoNumber(aptPoNumber);
+		address.setCity(city);
+		address.setState(state);
+		address.setZip(zip);
+		dateOfEvent.setYear(year);
+		dateOfEvent.setMonth(month);
+		dateOfEvent.setDay(day);
+		dateOfEvent.setTime(time);
+		civilianRequest.setDescription(description);
+		
+		
+	}
 	public void setMilitaryBookingStatusToCancelled(int bookingId){
 		MilitaryRequest mr = em.find(MilitaryRequest.class,  bookingId);
 		BookingStatus bs = em.find(BookingStatus.class,  3);
