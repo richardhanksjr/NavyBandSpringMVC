@@ -19,7 +19,7 @@
 		our DAO -->
 	<bean id="myEntityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="mydb" />
+		<property name="persistenceUnitName" value="navybanddb" />
 	</bean>
 
 	<!-- Declare a TransactionManager so we can have Spring automate transactions 

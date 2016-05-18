@@ -40,7 +40,7 @@ public class NavyBandJPADAO implements NavyBandDAO{
 	//Create a new point of contact.  Point of contact is the main user for requesting gigs.
 	//In the creation of a POC, an address will also be created and assigned and the band will be assigned to the 
 	//band in question (should be band with id of 1, so that is hardcoded)
-	public int createNewPointOfContact(String rank, String firstName, String lastName,
+	public PointOfContact createNewPointOfContact(String rank, String firstName, String lastName,
 										String title, String street, String aptPoNumber, String city, 
 										String state, String zip, String workPhone, String cellPhone,
 										String homePhone, String email, String fax, String password){
@@ -51,7 +51,8 @@ public class NavyBandJPADAO implements NavyBandDAO{
 		//a unique email.
 		for (PointOfContact pointOfContact : pointsOfContact) {
 			if(pointOfContact.getEmail().equals(email)){
-				return 1;
+				PointOfContact pc = null;
+				return pc;
 			}
 		}
 		Address address = new Address();
@@ -71,11 +72,54 @@ public class NavyBandJPADAO implements NavyBandDAO{
 		poc.setAddress(address);
 		poc.setWorkPhone(workPhone);
 		poc.setCellPhone(cellPhone);
-		poc.setHomePhone(homePhone);
-		poc.setEmail(email);
+		poc.setHomePhone(homePhone); 
+		//Set all new email addresses to lower case so that email log-ins are case INsensitive. (The log-in also puts emails to lower case)
+		poc.setEmail(email.toLowerCase());
 		poc.setFax(fax);
 		poc.setPassword(password);
 		em.persist(poc);
-		return 0;
+		return poc;
 	}
+	
+	public PointOfContact getPointOfContactByEmail(String email){
+		String query = "Select p from PointOfContact p where email = '" + email + "'";
+		System.out.println(email);
+		try{
+			PointOfContact pc = em.createQuery(query, PointOfContact.class).getSingleResult();
+			return pc;
+		}catch(Exception e){
+			System.out.println(e.toString());
+			return null;
+		}
+		 
+	}
+	
+	//Method for getting the band from the database.
+	public Band getBandByEmail(String email){
+		String query = "Select b from Band b where email = '" + email + "'";
+		try{
+			Band band = em.createQuery(query, Band.class).getSingleResult();
+			return band;
+		}catch(Exception e){
+			System.out.println(e.toString());
+			return null;
+		}
+	}
+	
+	public CivilianRequest getCivilianRequestById(int id){
+		CivilianRequest civilianRequest;
+		String query = "select c from CivilianRequest c where id = '" + id + "'";
+		try{
+		 civilianRequest = em.createQuery(query, CivilianRequest.class).getSingleResult();
+		}catch(Exception e){
+			 civilianRequest = null;
+		}
+		return civilianRequest;
+	}
+	
+//	public Band getBandById(int id){
+//		String query = "select b from band b where id = '" + id + "'";
+//		Band band = em.createQuery(query, Band.class).getSingleResult();
+//		return band;
+//	}
 }
