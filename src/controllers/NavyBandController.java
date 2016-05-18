@@ -239,7 +239,7 @@ public class NavyBandController {
 			return mv;
 		} else {
 			mv.addObject("request", civilianRequest);
-			mv.setViewName("editRequest.jsp");
+			mv.setViewName("editCivilianRequest.jsp");
 			return mv;
 		}
 	}

@@ -56,7 +56,7 @@
 						</form>
 						<form action="setCivilianBookingStatusToCancelled.do" method="GET">
 							<input type="hidden" name="bookingId"
-								value="${requests.bookingStatus.id }">
+								value="${requests.id }">
 								<input type = "hidden" name = "userEmail" value = "${user.email }">
 								<input type="submit" value="Cancel Event">
 						</form>
@@ -91,7 +91,7 @@
 								value="Edit Request Information">
 						</form>
 						<form action="setMilitaryBookingStatusToCancelled.do" method="GET">
-							<input type = "hidden" name = "bookingId" value = "${requests.bookingStatus.id }">
+							<input type = "hidden" name = "bookingId" value = "${requests.id }">
 							<input type = "hidden" name = "userEmail" value = "${user.email }">
 							<input type="submit" value="Cancel Event">
 						</form>
