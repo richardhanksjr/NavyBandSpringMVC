@@ -11,6 +11,7 @@ import entities.Address;
 import entities.Band;
 import entities.BookingStatus;
 import entities.CivilianRequest;
+import entities.DateOfEvent;
 import entities.MilitaryRequest;
 import entities.PointOfContact;
 
@@ -88,6 +89,25 @@ public class NavyBandJPADAO implements NavyBandDAO{
 		cr.setBookingStatus(bs);
 	}
 	
+	public void updateMilitaryRequestInfo(String street, String aptPoNumber,
+			String city, String state, String zip, String year, String description,
+			String month, String day, String time, int dateOfEventId, int addressId, int militaryRequestId){
+		Address address = em.find(Address.class, addressId);
+		DateOfEvent dateOfEvent = em.find(DateOfEvent.class, dateOfEventId);
+		MilitaryRequest militaryRequest = em.find(MilitaryRequest.class,  militaryRequestId);
+		address.setStreet(street);
+		address.setAptPoNumber(aptPoNumber);
+		address.setCity(city);
+		address.setState(state);
+		address.setZip(zip);
+		dateOfEvent.setYear(year);
+		dateOfEvent.setMonth(month);
+		dateOfEvent.setDay(day);
+		dateOfEvent.setTime(time);
+		militaryRequest.setDescription(description);
+		
+		
+	}
 	public void setMilitaryBookingStatusToCancelled(int bookingId){
 		MilitaryRequest mr = em.find(MilitaryRequest.class,  bookingId);
 		BookingStatus bs = em.find(BookingStatus.class,  3);

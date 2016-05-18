@@ -144,6 +144,23 @@ public class NavyBandController {
 		return ("main.jsp");
 	}
 
+	@RequestMapping("updateMilitaryRequestInfo.do")
+	public ModelAndView updateMilitaryRequestInfo(String street, String aptPoNumber,
+							String city, String state, String zip, String year, String description,
+							String month, String day, String time, String submit, int dateOfEventId, int addressId, int militaryRequestId){
+		ModelAndView mv = new ModelAndView();
+		if(submit.equals("cancel")){
+			mv.setViewName("main.jsp");
+			return mv;
+		}else{
+			dao.updateMilitaryRequestInfo(street, aptPoNumber, city, state, zip, year, description,
+					month, day, time, dateOfEventId, addressId, militaryRequestId);
+			mv.setViewName("main.jsp");
+			return mv;
+		}
+		
+		
+	}
 	@RequestMapping("loadMilitaryRequest.do")
 	public ModelAndView loadMilitaryRequest() {
 		ModelAndView mv = new ModelAndView();

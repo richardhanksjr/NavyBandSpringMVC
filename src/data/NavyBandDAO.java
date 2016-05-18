@@ -22,5 +22,8 @@ public interface NavyBandDAO {
 	public MilitaryRequest getMilitaryRequestById(int id);
 	public void setCivilianBookingStatusToCancelled(int bookingId);
 	public void setMilitaryBookingStatusToCancelled(int bookingId);
+	public void updateMilitaryRequestInfo(String street, String aptPoNumber,
+			String city, String state, String zip, String year, String description,
+			String month, String day, String time, int dateOfEventId, int addressId, int militaryRequestId);
 	
 }
