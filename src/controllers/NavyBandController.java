@@ -105,6 +105,25 @@ public class NavyBandController {
 		return mv;
 	}
 
+	@RequestMapping("loadUserEdit.do")
+	public ModelAndView loadEditUser(){
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("editUser.jsp");
+		return mv;
+	}
+	@RequestMapping("loadCivilianRequest.do")
+	public ModelAndView loadCivilianRequest(){
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("civilianRequest.jsp");
+		return mv;
+	}
+	
+	@RequestMapping("loadMilitaryRequest.do")
+	public ModelAndView loadMilitaryRequest(){
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("militaryRequest.jsp");
+		return mv;
+	}
 	// Method for logging a user into the system. Gets PointOfContact by email,
 	// checks password, and adds
 	// that POC to the session scope.

@@ -12,11 +12,22 @@
 	<form action="logOut.do" method="GET">
 		<input type="submit" value="Log Out">
 	</form>
+	<form action = "loadUserEdit.do" method = "GET">
+		<input type = "submit" value = "Edit Account Information">
+	</form>
 	<div>Welcome, ${user.firstName}</div>
 	<br>
 	<br>
 	<br>
 	<br>
+	<h4>Request the Band For a MILITARY-related Event</h4>
+	<form action = "loadMilitaryRequest.do" method = "GET">
+		<input type = "submit" value = "New Military Event">
+	</form>
+	<h4>Request the Band For a CIVILIAN-related Event</h4>
+	<form action = "loadCivilianRequest.do" method = "GET">
+		<input type = "submit" value = "New Civilian Event">
+	</form>
 	<div>Contact the Band</div>
 	<a href="mailto:${band.email }" target="_top">Contact the Band</a>
 	<c:if test="${! empty(user.civilianRequests) }">
@@ -76,5 +87,23 @@
 			</c:forEach>
 		</table>
 	</c:if>
+	<h2>Navy Band Southeast Contact Information</h2>
+	<table>
+		<tr>
+			<td>Navy Band Southeast</td>
+		</tr>
+		<tr>
+			<td>PO Box ${band.poBox }</td>
+		</tr>
+		<tr>
+			<td>${band.streetAddress }</td>
+		</tr>
+		<tr>
+			<td>${band.city }, ${band.state } ${band.zip }</td>
+		</tr>
+		<tr>
+			<td>Phone: ${band.phone }, (DSN) ${band.dsn }
+		</tr>
+	</table>
 </body>
 </html>
