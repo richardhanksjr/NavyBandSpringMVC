@@ -185,7 +185,24 @@ public class NavyBandController {
 		mv.setViewName("militaryRequest.jsp");
 		return mv;
 	}
-
+//Method for the user to book the band for a military-related event
+	@RequestMapping("newMilitaryRequest.do")
+	public ModelAndView newMilitaryRequest(String aptPoNumber, String city, String state,
+							String zip, String year, String month, String day, String time,
+							Boolean moveable, String street, String type, int pointOfContactId){
+		ModelAndView mv = new ModelAndView();
+		//Check if any non-null values are null.  If so, send the user back to the request screen.
+		if(type.equals(null) || moveable.equals(null) || year.equals(null) || month.equals(null) || day.equals(null) || time.equals(null)){
+			mv.setViewName("militaryRequest.jsp");
+			String errorMessage = "Type of event, moveable date, year, month, day, and time are required values";
+			mv.addObject("error", errorMessage);
+			return mv;
+		}
+		
+		dao.newMilitaryRequest(aptPoNumber, city, state, zip, year, month, day, time, moveable, street, type, pointOfContactId);
+		mv.setViewName("main.jsp");
+		return mv;
+	}
 	// Method for logging a user into the system. Gets PointOfContact by email,
 	// checks password, and adds
 	// that POC to the session scope.

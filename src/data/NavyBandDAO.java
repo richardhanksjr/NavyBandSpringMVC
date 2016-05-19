@@ -2,6 +2,8 @@ package data;
 
 import java.util.List;
 
+import org.springframework.web.servlet.ModelAndView;
+
 import entities.Band;
 import entities.CivilianRequest;
 import entities.MilitaryRequest;
@@ -28,5 +30,7 @@ public interface NavyBandDAO {
 	public void updateCivilianRequestInfo(String street, String aptPoNumber,
 			String city, String state, String zip, String year, String description,
 			String month, String day, String time, int dateOfEventId, int addressId, int civilianRequestId);
+	public void newMilitaryRequest(String aptPoNumber, String city, String state, String zip, String year, String month,
+			String day, String time, Boolean moveable, String street, String type, int pointOfContactId);
 	
 }
