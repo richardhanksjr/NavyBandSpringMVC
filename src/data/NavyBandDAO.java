@@ -32,5 +32,15 @@ public interface NavyBandDAO {
 			String month, String day, String time, int dateOfEventId, int addressId, int civilianRequestId);
 	public void newMilitaryRequest(String aptPoNumber, String city, String state, String zip, String year, String month,
 			String day, String time, Boolean moveable, String street, String type, int pointOfContactId);
+	public void newCivilianRequest(String title, String aptPoNumber, String city, String state,
+			String zip, String year, String month, String day, String time,
+			Boolean moveable, String street, String type, int pointOfContactId, 
+			Integer attendance, Boolean attending, String charges, Boolean governmentBacking,
+			Boolean exclusive, Boolean meal, String description);
+	public void setCivilianBookingStatus(int bookingId, int statusId);
+	public void setMilitaryBookingStatus(int bookingId,  int statusId);
+	public void setUnitMilitary(int unitId, int requestId);
+	public void setUnitCivilian(int unitId, int requestId);
+	
 	
 }

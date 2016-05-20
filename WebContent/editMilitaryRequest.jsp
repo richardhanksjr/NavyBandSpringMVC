@@ -13,6 +13,9 @@
 	<input type = "hidden" name = "addressId" value = "${request.address.id }">
 	<input type = "hidden" name = "dateOfEventId" value = "${request.dateOfEvent.id }">
 	<input type = "hidden" name = "militaryRequestId" value = "${request.id }">
+	<input type = "hidden" name = "pointOfContactEmail" value = "${user.email }">
+	<input type = "hidden" name = "origin" value = "${origin }">
+	
 	<div>Apt/PO Box Number</div>
 	<input type = "text" name = "aptPoNumber" value = "${request.address.aptPoNumber }">
 	<div>City</div>
@@ -34,5 +37,6 @@
 	<input type = "submit" name = "submit" value = "Update Event Information">
 	<input type = "submit" name = "submit" value = "Cancel">
 </form>
+${user.id }
 </body>
 </html>

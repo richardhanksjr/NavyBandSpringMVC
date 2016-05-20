@@ -51,10 +51,16 @@
 					<td>
 						<form action="editCivilianRequest.do" method="POST">
 							<input type="hidden" name="requestId" value="${requests.id}">
+							<input type = "hidden" name = "pointOfContactId"" value = "${user.id }">
+							<!--  Send the place this method is originating from so response can be directed appropriately-->
+							<input type = "hidden" name = "origin" value = "main.jsp">
 							<input type="submit" name="submit"
 								value="Edit Request Information">
 						</form>
 						<form action="setCivilianBookingStatusToCancelled.do" method="GET">
+						<input type = "hidden" name = "pointOfContactId"" value = "${user.id }">
+							<!--  Send the place this method is originating from so response can be directed appropriately-->
+							<input type = "hidden" name = "origin" value = "main.jsp">
 							<input type="hidden" name="bookingId"
 								value="${requests.id }">
 								<input type = "hidden" name = "userEmail" value = "${user.email }">
@@ -87,6 +93,8 @@
 					<td>
 						<form action="editMilitaryRequest.do" method="POST">
 						<input type="hidden" name="requestId" value="${requests.id}">
+						<input type = "hidden" name = "pointOfContactId"" value = "${user.id }">
+						<input type = "hidden" name = "origin" value = "main.jsp">
 							<input type="submit" name="submit"
 								value="Edit Request Information">
 						</form>

@@ -93,7 +93,32 @@ public class NavyBandJPADAO implements NavyBandDAO {
 		BookingStatus bs = em.find(BookingStatus.class, 3);
 		cr.setBookingStatus(bs);
 	}
+	
+	public void setCivilianBookingStatus(int bookingId,  int statusId) {
+		CivilianRequest cr = em.find(CivilianRequest.class, bookingId);
+		BookingStatus bs = em.find(BookingStatus.class, statusId);
+		cr.setBookingStatus(bs);
+	}
 
+	public void setMilitaryBookingStatus(int bookingId,  int statusId) {
+		MilitaryRequest mr = em.find(MilitaryRequest.class, bookingId);
+		BookingStatus bs = em.find(BookingStatus.class, statusId);
+		mr.setBookingStatus(bs);
+	}
+	
+	public void setUnitMilitary(int unitId, int requestId){
+		Ensemble ensemble = em.find(Ensemble.class,  unitId);
+		MilitaryRequest militaryRequest = em.find(MilitaryRequest.class,  requestId);
+		militaryRequest.setEnsemble(ensemble);
+		
+	}
+	
+	public void setUnitCivilian(int unitId, int requestId){
+		Ensemble ensemble = em.find(Ensemble.class,  unitId);
+		CivilianRequest civilianRequest = em.find(CivilianRequest.class,  requestId);
+		civilianRequest.setEnsemble(ensemble);
+		
+	}
 	public void updateMilitaryRequestInfo(String street, String aptPoNumber, String city, String state, String zip,
 			String year, String description, String month, String day, String time, int dateOfEventId, int addressId,
 			int militaryRequestId) {
@@ -132,6 +157,61 @@ public class NavyBandJPADAO implements NavyBandDAO {
 
 	}
 
+	public void newCivilianRequest(String title, String aptPoNumber, String city, String state,
+								String zip, String year, String month, String day, String time,
+								Boolean moveable, String street, String type, int pointOfContactId, 
+								Integer attendance, Boolean attending, String charges, Boolean governmentBacking,
+								Boolean exclusive, Boolean meal, String description){
+		try{
+		//All new gigs have a default bookings status that corresponds to BookingStatus id#1
+		
+		BookingStatus bookingStatus = em.find(BookingStatus.class, 1);
+		Address address = new Address();
+		//Address has a non-null reference to Band in the database.  Get the band here to assign it later.
+		Band band = em.find(Band.class, 1);
+		address.setBand(band);
+		address.setAptPoNumber(aptPoNumber);
+		PointOfContact pointOfContact = em.find(PointOfContact.class,  pointOfContactId);
+		//Address name is a non-null value.  The value is assigned here as the concantenation of the first and last names.
+		address.setName(pointOfContact.getFirstName() + " " + pointOfContact.getLastName());
+		address.setCity(city);
+		address.setState(state);
+		address.setStreet(street);
+		address.setZip(zip);
+		//Address must be added before MilitaryRequest to avoid constraint violations in the database
+		em.persist(address);
+		DateOfEvent dateOfEvent = new DateOfEvent();
+		dateOfEvent.setYear(year);
+		dateOfEvent.setMonth(month);
+		dateOfEvent.setDay(day);
+		dateOfEvent.setTime(time);
+		//DateOfEvent must be added before MilitaryRequest to avoid constraint violations in the database
+		em.persist(dateOfEvent);
+		CivilianRequest civilianRequest = new CivilianRequest();
+		civilianRequest.setExpectedAttendance(attendance);
+		civilianRequest.setChargesDescription(charges);
+		civilianRequest.setOtherUnits(attending);
+		civilianRequest.setChargesDescription(charges);
+		civilianRequest.setBackingOfGovernment(governmentBacking);
+		civilianRequest.setOgranizationExclusive(exclusive);
+		civilianRequest.setFundMeal(meal);
+		civilianRequest.setDescription(description);
+		civilianRequest.setMoveableDate(moveable);
+		civilianRequest.setAddress(address);
+		civilianRequest.setDateOfEvent(dateOfEvent);
+		civilianRequest.setTitle(title);
+		
+		civilianRequest.setPointOfContact(pointOfContact);
+		civilianRequest.setBookingStatus(bookingStatus);
+		//Ensemble ensemble = em.find(Ensemble.class,  1);
+//		//There is an error in the database, so a default ensemble needs to be assigned to a military request.
+//		militaryRequest.setEnsemble(ensemble);
+		em.persist(civilianRequest);
+		}catch(Exception e){
+			System.out.println(e.toString());
+		}
+		
+	}
 	public void newMilitaryRequest(String aptPoNumber, String city, String state, String zip, String year, String month,
 			String day, String time, Boolean moveable, String street, String type, int pointOfContactId) {
 		try{

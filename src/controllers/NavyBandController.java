@@ -120,60 +120,134 @@ public class NavyBandController {
 
 	// Get the booking id for a gig and set it's booking status to cancelled
 	@RequestMapping("setCivilianBookingStatusToCancelled.do")
-	public String setCivilianBookingStatusToCancelled(@RequestParam("bookingId") int bookingId,
+	public ModelAndView setCivilianBookingStatusToCancelled(@RequestParam("bookingId") int bookingId,
 			@RequestParam("userEmail") String userEmail, HttpSession session) {
+		ModelAndView mv = new ModelAndView();
+		
 		dao.setCivilianBookingStatusToCancelled(bookingId);
 		// Refresh the user's information and put that updated user in the
 		// session
 		// so current information displays.
 		refreshUserInSession(session, userEmail);
+		//Check the origin of the request and forward it to the viewName so response
+		//from that page goes back to original location.
+		
+			
+			mv.setViewName("main.jsp");
+		
+			List<CivilianRequest> civilianRequests = dao.getAllCivilianRequests();
+			mv.addObject("civilianRequests", civilianRequests);
+		
+		
 
-		return ("main.jsp");
+		return mv;
+	}
+	
+	@RequestMapping("returnToBandPage.do")
+	public String returnToBandPage(){
+		return "band.jsp";
+	}
+	@RequestMapping("displayGigSheetMilitary.do")
+	public ModelAndView displayGigSheetMilitary(int requestId){
+		ModelAndView mv = new ModelAndView();
+		MilitaryRequest militaryRequest = dao.getMilitaryRequestById(requestId);
+		mv.addObject("militaryRequest", militaryRequest);
+		mv.setViewName("gigSheet.jsp");
+		return mv;
+		
+		
+	}
+	//Used by the band to set the booking status of a civilian event
+	@RequestMapping("setCivilianBookingStatus.do")
+	public ModelAndView setCivilianBookingStatus(int bookingId, int statusId){
+		ModelAndView mv = new ModelAndView();
+		dao.setCivilianBookingStatus(bookingId, statusId);
+		mv.setViewName("band.jsp");
+		return mv;
+	}
+	
+	//Used by the band to set the booking status of a civilian event
+	@RequestMapping("setMilitaryBookingStatus.do")
+	public ModelAndView setMilitaryBookingStatus(int bookingId, int statusId){
+		ModelAndView mv = new ModelAndView();
+		dao.setMilitaryBookingStatus(bookingId, statusId);
+		mv.setViewName("band.jsp");
+		return mv;
 	}
 
 	// Get the booking id for a gig and set it's booking status to cancelled
 	@RequestMapping("setMilitaryBookingStatusToCancelled.do")
-	public String setMilitaryBookingStatusToCancelled(@RequestParam("bookingId") int bookingId,
+	public ModelAndView setMilitaryBookingStatusToCancelled(@RequestParam("bookingId") int bookingId,
 			@RequestParam("userEmail") String userEmail, HttpSession session) {
+		ModelAndView mv = new ModelAndView();
 		dao.setMilitaryBookingStatusToCancelled(bookingId);
 		// Refresh the user's information and put that updated user in the
 		// session
 		// so current information displays.
 		refreshUserInSession(session, userEmail);
+			mv.setViewName("main.jsp");
+			List<MilitaryRequest> militaryRequests = dao.getAllMilitaryRequests();
+			mv.addObject("militaryRequests", militaryRequests);
+		
 
-		return ("main.jsp");
+		return mv;
+
+		
 	}
 
 	@RequestMapping("updateMilitaryRequestInfo.do")
 	public ModelAndView updateMilitaryRequestInfo(String street, String aptPoNumber,
 							String city, String state, String zip, String year, String description,
-							String month, String day, String time, String submit, int dateOfEventId, int addressId, int militaryRequestId){
+							String month, String day, String time, String submit, int dateOfEventId, 
+							HttpSession session, String pointOfContactEmail, int addressId, int militaryRequestId, String origin){
 		ModelAndView mv = new ModelAndView();
 		if(submit.equals("cancel")){
-			mv.setViewName("main.jsp");
+			mv.setViewName(origin);
 			return mv;
 		}else{
 			dao.updateMilitaryRequestInfo(street, aptPoNumber, city, state, zip, year, description,
 					month, day, time, dateOfEventId, addressId, militaryRequestId);
-			mv.setViewName("main.jsp");
+			refreshUserInSession(session, pointOfContactEmail);
+			mv.setViewName(origin);
 			return mv;
 		}
 		
 		
 	}
 	
+	//Called by the band to see all military requests.
+	@RequestMapping("viewMilitaryRequests.do")
+	public ModelAndView viewMilitaryRequests(){
+		ModelAndView mv = new ModelAndView();
+		List<MilitaryRequest> militaryRequests = dao.getAllMilitaryRequests();
+		mv.addObject("militaryRequests", militaryRequests);
+		mv.setViewName("band.jsp");
+		return mv;
+	}
+	
+	//Called by the band to see all military requests.
+	@RequestMapping("viewCivilianRequests.do")
+	public ModelAndView viewCivilianRequests(){
+		ModelAndView mv = new ModelAndView();
+		List<CivilianRequest> civilianRequests = dao.getAllCivilianRequests();
+		mv.addObject("civilianRequests", civilianRequests);
+		mv.setViewName("band.jsp");
+		return mv;
+	}
 	@RequestMapping("updateCivilianRequestInfo.do")
 	public ModelAndView updateCivilianRequestInfo(String street, String aptPoNumber,
 							String city, String state, String zip, String year, String description,
-							String month, String day, String time, String submit, int dateOfEventId, int addressId, int militaryRequestId){
+							String month, String day, String time, String submit, int dateOfEventId,
+							HttpSession session, String pointOfContactEmail, int addressId, int militaryRequestId, String origin){
 		ModelAndView mv = new ModelAndView();
 		if(submit.equals("cancel")){
-			mv.setViewName("main.jsp");
+			mv.setViewName(origin);
 			return mv;
 		}else{
 			dao.updateCivilianRequestInfo(street, aptPoNumber, city, state, zip, year, description,
 					month, day, time, dateOfEventId, addressId, militaryRequestId);
-			mv.setViewName("main.jsp");
+			mv.setViewName(origin);
+			refreshUserInSession(session, pointOfContactEmail);
 			return mv;
 		}
 		
@@ -203,6 +277,29 @@ public class NavyBandController {
 		mv.setViewName("main.jsp");
 		return mv;
 	}
+	
+	//Method for the user to book the band for a civilian-related event
+		@RequestMapping("newCivilianRequest.do")
+		public ModelAndView newCivilianRequest(String title, String aptPoNumber, String city, String state,
+								String zip, String year, String month, String day, String time,
+								Boolean moveable, String street, String type, int pointOfContactId, 
+								Integer attendance, Boolean attending, String charges, Boolean governmentBacking,
+								Boolean exclusive, Boolean meal, String description, String pointOfContactEmail, HttpSession session){
+			ModelAndView mv = new ModelAndView();
+			//Check if any non-null values are null.  If so, send the user back to the request screen.
+//			if(title.equals(null) || moveable.equals(null) || year.equals(null) || month.equals(null) || day.equals(null) || time.equals(null)){
+//				mv.setViewName("militaryRequest.jsp");
+//				String errorMessage = "Title of event, moveable date, year, month, day, and time are required values";
+//				mv.addObject("error", errorMessage);
+//				return mv;
+//			}
+			
+			dao.newCivilianRequest(title, aptPoNumber, city, state, zip, year, month, day, time, moveable, street, type, pointOfContactId,
+									attendance, attending, charges, governmentBacking, exclusive, meal, description);
+			mv.setViewName("main.jsp");
+			refreshUserInSession(session, pointOfContactEmail);
+			return mv;
+		}
 	// Method for logging a user into the system. Gets PointOfContact by email,
 	// checks password, and adds
 	// that POC to the session scope.
@@ -280,33 +377,50 @@ public class NavyBandController {
 	}
 
 	@RequestMapping("editCivilianRequest.do")
-	public ModelAndView editCivilianRequest(@RequestParam("requestId") int id) {
+	public ModelAndView editCivilianRequest(@RequestParam("requestId") int id, String origin) {
 		ModelAndView mv = new ModelAndView();
 		CivilianRequest civilianRequest = dao.getCivilianRequestById(id);
 		// If request comes back null, there was an error in querying the
 		// database.
 		// Send the user back to main.jsp
-		if (civilianRequest.equals(null)) {
-			mv.setViewName("main.jsp");
-			return mv;
-		} else {
+//		if (civilianRequest.equals(null)) {
+//			mv.setViewName("main.jsp");
+//			return mv;
+//		} else {
 			mv.addObject("request", civilianRequest);
+			mv.addObject("origin", origin);
 			mv.setViewName("editCivilianRequest.jsp");
 			return mv;
-		}
+//	}
 	}
 
+	@RequestMapping("assignUnitMilitary.do")
+	public ModelAndView assignUnitMilitary(int unitId, int requestId){
+		ModelAndView mv = new ModelAndView();
+		dao.setUnitMilitary(unitId, requestId);
+		mv.setViewName("band.jsp");
+		return mv;
+	}
+
+	@RequestMapping("assignUnitCivilian.do")
+	public ModelAndView assignUnitCivilian(int unitId, int requestId){
+		ModelAndView mv = new ModelAndView();
+		dao.setUnitCivilian(unitId, requestId);
+		mv.setViewName("band.jsp");
+		return mv;
+	}
 	@RequestMapping("editMilitaryRequest.do")
-	public ModelAndView editMilitaryRequest(@RequestParam("requestId") int id) {
+	public ModelAndView editMilitaryRequest(@RequestParam("requestId") int id, String origin) {
 		ModelAndView mv = new ModelAndView();
 		MilitaryRequest militaryRequest = dao.getMilitaryRequestById(id);
 		// If request comes back null, there was an error in querying the
 		// database.
 		// Send the user back to main.jsp
 		if (militaryRequest.equals(null)) {
-			mv.setViewName("main.jsp");
+			mv.setViewName(origin);
 			return mv;
 		} else {
+			mv.addObject("origin", origin);
 			mv.addObject("request", militaryRequest);
 			mv.setViewName("editMilitaryRequest.jsp");
 			return mv;
