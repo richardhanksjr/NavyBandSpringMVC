@@ -10,3 +10,5 @@ perform at the event, to completing after-action writeups.
 
 This program was written by Richard Hanks, including database design, Java JPA/Hibernate mapping of Java POJO (Plain Old Java Object) classes
 to map to the database, a Spring MVC controller on the middle tier, and jsp/jstl on the front end as well as bootstrap css.
+
+** Entities (POJO) can be found here: https://github.com/richardhanksjr/NavyBandSpring/tree/master/target/classes/entities
